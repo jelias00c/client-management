@@ -1,5 +1,5 @@
 #!/bin/bash
-# remove smart notebook
+# recalls the license and removes the software
 
 LICENSE_KEY=ENTER_KEY
 SMART_NB=/Applications/SMART\ Technologies/Notebook.app
