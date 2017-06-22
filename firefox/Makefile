@@ -1,6 +1,7 @@
-# Author: 		Jesus Elias
-# Description: 	Makefile for The Luggage
-#				This package will copy the JS and CFG files to the Firefox app directory
+# Author:	Jesus Elias
+# Description:	Makefile for The Luggage
+#		This package will copy the JS and 
+#		CFG files to the Firefox app directory
 
 include /usr/local/share/luggage/luggage.make
 
