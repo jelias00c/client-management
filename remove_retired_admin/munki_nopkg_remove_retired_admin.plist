@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>autoremove</key>
+	<false/>
+	<key>catalogs</key>
+	<array>
+		<string>testing</string>
+	</array>
+	<key>description</key>
+	<string>Checks for the presence of the new admin account and then removes the retired one.</string>
+	<key>display_name</key>
+	<string>Remove Retired Admin</string>
+	<key>installcheck_script</key>
+	<string>#!/bin/bash
+OLD_ACCT="oldadmin"
+OLD_ACCT_CHK=$(/usr/bin/dscl . -list /Users | grep -w 'oldadmin')
+NEW_ACCT="newadmin"
+NEW_ACCT_CHK=$(/usr/bin/dscl . -list /Users | grep -w 'newadmin')
+
+if [[ $NEW_ACCT_CHK == $NEW_ACCT ]]; then
+	if [[ $OLD_ACCT_CHK == $OLD_ACCT ]]; then
+		exit 0
+	else
+		exit 1
+	fi
+else
+	exit 1
+fi</string>
+	<key>installer_type</key>
+	<string>nopkg</string>
+	<key>minimum_os_version</key>
+	<string>10.10</string>
+	<key>name</key>
+	<string>remove_admin</string>
+	<key>postinstall_script</key>
+	<string>#!/bin/bash
+OLD_ACCT="oldadmin"
+OLD_ACCT_CHK=$(/usr/bin/dscl . -list /Users | grep -w 'oldadmin')
+
+# remove older admin account
+if [[ $OLD_ACCT_CHK == $OLD_ACCT ]]; then
+	/usr/bin/dscl . -delete /Users/$OLD_ACCT
+fi
+
+# move older admin home
+if [[ -d /Users/$OLD_ACCT ]]; then
+	mv /Users/$OLD_ACCT /var/$OLD_ACCT
+fi
+
+# set permissions
+if [[ -d /var/$OLD_ACCT ]]; then
+	chown -R newadmin:admin /var/$OLD_ACCT
+	chmod -R 740 /var/$OLD_ACCT
+fi
+
+# remove all ARD admin access
+sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -deactivate -configure -access -off
+# add new admin account
+sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate -configure -access -on -users newadmin -allowAccessFor -specifiedUsers
+# add privileges
+sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate -configure -access -on -users newadmin -privs -DeleteFiles -ControlObserve -TextMessages -OpenQuitApps -GenerateReports -RestartShutDown -SendFiles -ChangeSettings -restart -agent -menu</string>
+	<key>unattended_install</key>
+	<true/>
+	<key>uninstallable</key>
+	<false/>
+	<key>version</key>
+	<string>1.0</string>
+</dict>
+</plist>
