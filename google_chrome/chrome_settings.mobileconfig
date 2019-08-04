@@ -1,0 +1,67 @@
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>PayloadIdentifier</key>
+    <string>com.companyname.profile.chrome.date</string>
+    <key>PayloadRemovalDisallowed</key>
+    <true/>
+    <key>PayloadScope</key>
+    <string>System</string>
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    <key>PayloadUUID</key>
+    <string>6A53E33E-A9E8-11E6-80F5-76304DEC7EB7</string>
+    <key>PayloadOrganization</key>
+    <string>COMPANY NAME</string>
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+    <key>PayloadDisplayName</key>
+    <string>PAYLOAD NAME</string>
+    <key>PayloadContent</key>
+    <array>
+        <dict>
+            <key>PayloadType</key>
+            <string>com.apple.ManagedClient.preferences</string>
+            <key>PayloadVersion</key>
+            <integer>1</integer>
+            <key>PayloadIdentifier</key>
+            <string>com.companyname.profile.chrome.date</string>
+            <key>PayloadUUID</key>
+            <string>BC8C5630-A9E9-11E6-80F5-76304DEC7EB7</string>
+            <key>PayloadEnabled</key>
+            <true/>
+            <key>PayloadDisplayName</key>
+            <string>Sets Chrome attributes and locks them in place.</string>
+            <key>PayloadContent</key>
+            <dict>
+                <key>com.google.Chrome</key>
+                <dict>
+                    <key>Forced</key>
+                    <array>
+                        <dict>
+                            <key>mcx_preference_settings</key>
+                            <dict>
+                                <key>DefaultPluginsSetting</key>
+                                <integer>1</integer>
+                                <key>DefaultPopupsSetting</key>
+                                <integer>1</integer>
+                                <key>PluginsAllowedForUrls</key>
+                                <array>
+									<string>http://127.0.0.1:8080</string>
+									<string>https://127.0.0.1:8080</string>
+									<string>[*.]companycdn.com</string>
+								</array>
+                                <key>URLBlacklist</key>
+                                <array>
+                                  <string>https://www.company.com</string>
+                                  <string>http://www.company.com</string>
+                                </array>
+                            </dict>
+                        </dict>
+                    </array>
+                </dict>
+            </dict>
+        </dict>
+    </array>
+</dict>
+</plist>
