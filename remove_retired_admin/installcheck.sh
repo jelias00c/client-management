@@ -1,11 +1,12 @@
 #!/bin/bash
-OLD_ACCT="oldadmin"
-OLD_ACCT_CHK=$(/usr/bin/dscl . -list /Users | grep -w 'oldadmin')
-NEW_ACCT="newadmin"
-NEW_ACCT_CHK=$(/usr/bin/dscl . -list /Users | grep -w 'newadmin')
 
-if [[ $NEW_ACCT_CHK == $NEW_ACCT ]]; then
-	if [[ $OLD_ACCT_CHK == $OLD_ACCT ]]; then
+old_account="administrator"
+new_account="newadmin"
+
+/usr/bin/dscl . -read /Users/$new_account UniqueID &> /dev/null
+if [[ $? -eq '0' ]]; then
+	/usr/bin/dscl . -read /Users/$old_account UniqueID &> /dev/null
+	if [[ $? -eq '0' ]]; then
 		exit 0
 	else
 		exit 1
