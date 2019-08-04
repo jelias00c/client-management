@@ -1,26 +1,24 @@
 #!/bin/bash
-OLD_ACCT="oldadmin"
-OLD_ACCT_CHK=$(/usr/bin/dscl . -list /Users | grep -w 'oldadmin')
+
+old_account="administrator"
+new_account="newadmin"
+ard_group_name="com.apple.local.ard_admin"
+kickstart="/System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart"
 
 # remove older admin account
-if [[ $OLD_ACCT_CHK == $OLD_ACCT ]]; then
-	/usr/bin/dscl . -delete /Users/$OLD_ACCT
-fi
-
-# move older admin home
-if [[ -d /Users/$OLD_ACCT ]]; then
-	mv /Users/$OLD_ACCT /var/$OLD_ACCT
+/usr/bin/dscl . -delete /Users/$old_account
+if [[ -d /Users/$old_account ]]; then
+	/bin/mv -f /Users/$old_account /var/$old_account
 fi
 
 # set permissions
-if [[ -d /var/$OLD_ACCT ]]; then
-	chown -R newadmin:admin /var/$OLD_ACCT
-	chmod -R 740 /var/$OLD_ACCT
+if [[ -d /var/$old_account ]]; then
+	/usr/sbin/chown -R $new_account:admin /var/$old_account
 fi
 
-# remove all ARD admin access
-sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -deactivate -configure -access -off
-# add new admin account
-sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate -configure -access -on -users newadmin -allowAccessFor -specifiedUsers
-# add privileges
-sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate -configure -access -on -users newadmin -privs -DeleteFiles -ControlObserve -TextMessages -OpenQuitApps -GenerateReports -RestartShutDown -SendFiles -ChangeSettings -restart -agent -menu
+# update apple remote desktop access
+/usr/sbin/dseditgroup -o edit -n /Local/Default -a $new_account -t user "$ard_group_name"
+/usr/sbin/dseditgroup -o edit -n /Local/Default -d $old_account -t user "$ard_group_name"
+$ard_kickstart -restart -quiet
+
+exit 0
