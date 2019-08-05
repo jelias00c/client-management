@@ -3,16 +3,12 @@
 old_account="administrator"
 new_account="newadmin"
 ard_group_name="com.apple.local.ard_admin"
-kickstart="/System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart"
+ard_kickstart="/System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart"
 
 # remove older admin account
 /usr/bin/dscl . -delete /Users/$old_account
 if [[ -d /Users/$old_account ]]; then
 	/bin/mv -f /Users/$old_account /var/$old_account
-fi
-
-# set permissions
-if [[ -d /var/$old_account ]]; then
 	/usr/sbin/chown -R $new_account:admin /var/$old_account
 fi
 
